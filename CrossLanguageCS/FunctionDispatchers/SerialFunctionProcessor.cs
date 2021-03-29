@@ -21,8 +21,11 @@ namespace CrossLanguageCS.FunctionDispatchers
 
             // pair.Key == "sendPing"
             // pair.Value == "s'www.google.co.uk',i1000"
-            KeyValuePair<string, string> pair = base.Parser.GetNameParams(line);
+            KeyValuePair<string, string> pair = base.Parameters.SplitNameAndParameters(line);
             base.OnFunctionReceived(pair.Key, pair.Value);
+
+            IFunction a = this.Table.FunctionsMap[""];
+            
         }
     }
 }

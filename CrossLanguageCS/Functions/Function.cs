@@ -34,7 +34,7 @@ namespace CrossLanguageCS.Functions
 
     public class Function<T1, T2> : IFunction
     {
-        private readonly Action<T1, T2> Action;
+        public readonly Action<T1, T2> Action;
 
         public Function(Action<T1, T2> action)
         {

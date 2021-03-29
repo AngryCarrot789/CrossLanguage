@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
-using CrossLanguageCS.Helpers;
+using CrossLanguageCS.Exceptions;
 
 namespace CrossLanguageCS.Functions
 {
@@ -10,7 +10,7 @@ namespace CrossLanguageCS.Functions
     /// A class with some helper functions for extracting functions names, and also 
     /// a system for registering functions which create specific data types
     /// </summary>
-    public class ParameterParser
+    public class ParameterCreator
     {
         /// <summary>
         /// The character used to split the function name and the parameters
@@ -20,7 +20,7 @@ namespace CrossLanguageCS.Functions
         /// <summary>
         /// The character used to differentiate multiple parameters
         /// </summary>
-        public char ParameterSplitter;
+        public char ParamSplitter;
 
         /// <summary>
         /// The character which is used to encapsulate strings
@@ -29,7 +29,7 @@ namespace CrossLanguageCS.Functions
 
         /// <summary>
         /// The characere which should go before <see cref="StringEncapsulator"/> 
-        /// value if the character after that is equal to <see cref="ParameterSplitter"/>,
+        /// value if the character after that is equal to <see cref="ParamSplitter"/>,
         /// in order to stop the entire parser from breaking
         /// </summary>
         public char StringEncapsulatorEndCanceller;
@@ -38,12 +38,12 @@ namespace CrossLanguageCS.Functions
 
         private StringBuilder ParameterBuilder;
 
-        public ParameterParser(char funcParamSplitter = ':', char paramsSplitter = '|', char stringEncapsulator = '\'', char stringEncapsulatorCancel = '\\')
+        public ParameterCreator(char funcParamSplitter = ':', char paramsSplitter = '|', char stringEncapsulator = '\'', char stringEncapsulatorCancel = '\\')
         {
             ParameterCreators = new Dictionary<Type, Func<object, string>>();
             ParameterBuilder = new StringBuilder(256);
             FuncNameParamsSplitter = funcParamSplitter;
-            ParameterSplitter = paramsSplitter;
+            ParamSplitter = paramsSplitter;
             StringEncapsulator = stringEncapsulator;
             StringEncapsulatorEndCanceller = stringEncapsulatorCancel;
         }
@@ -53,7 +53,7 @@ namespace CrossLanguageCS.Functions
         /// </summary>
         /// <param name="paramsList"></param>
         /// <param name="fullParameters"></param>
-        public void DeserialiseAndAppendParameters(List<string> paramsList, string fullParameters)
+        public void DeserialiseAndAppendParameters(List<object> paramsList, string fullParameters)
         {
             if (fullParameters.Length < 2)
                 return;
@@ -61,20 +61,27 @@ namespace CrossLanguageCS.Functions
             for(int i = 0; i < fullParameters.Length; i++)
             {
                 char c = fullParameters[i];
-                if (c == 'i' || c == 'd' || c == 'b')
+                if (c == 'i')
                 {
-                    c = fullParameters[++i];
-                    while (c != ParameterSplitter)
-                    {
-                        ParameterBuilder.Append(c);
-                        c = fullParameters[++i];
-                    }
-                    paramsList.Add(ParameterBuilder.ToString());
+                    ExtractParameter(ParameterBuilder, fullParameters, ref i);
+                    paramsList.Add(int.Parse(ParameterBuilder.ToString()));
+                    ParameterBuilder.Clear();
+                }
+                else if (c == 'd')
+                {
+                    ExtractParameter(ParameterBuilder, fullParameters, ref i);
+                    paramsList.Add(double.Parse(ParameterBuilder.ToString()));
+                    ParameterBuilder.Clear();
+                }
+                else if (c == 'b')
+                {
+                    ExtractParameter(ParameterBuilder, fullParameters, ref i);
+                    paramsList.Add(bool.Parse(ParameterBuilder.ToString()));
                     ParameterBuilder.Clear();
                 }
                 else if (c == 's')
                 {
-                    // this will allow almost any conbination of string. however, if the parameter string contains 
+                    // this will allow almost any conbination of string
                     c = fullParameters[++i];
                     if (c == StringEncapsulator)
                     {
@@ -89,6 +96,9 @@ namespace CrossLanguageCS.Functions
                         {
                             ParameterBuilder.Append(fullParameters[i++]);
                         }
+                        paramsList.Add(ParameterBuilder.ToString());
+                        ParameterBuilder.Clear();
+
                         // at this point, fullParameters[i] should be '
                         // so increase by 1 to get to the splitter, and the for loop will increase it again
                         // to get to the next parameter
@@ -96,6 +106,70 @@ namespace CrossLanguageCS.Functions
                     }
                 }
             }
+        }
+
+        private void ExtractParameter(StringBuilder sb, string fullParams, ref int index)
+        {
+            char c = fullParams[++index];
+            int indexLength = fullParams.Length - 1;
+            while (c != ParamSplitter)
+            {
+                sb.Append(c);
+                if (index == indexLength)
+                    break;
+                c = fullParams[++index];
+            }
+        }
+
+        public string SerialiseParameters<T1>(T1 p1)
+        {
+            return SerialiseType(p1);
+        }
+
+        public string SerialiseParameters<T1, T2>(T1 p1, T2 p2)
+        {
+            return new StringBuilder(64).
+                Append(SerialiseType(p1)).Append(ParamSplitter).
+                Append(SerialiseType(p2)).ToString();
+        }
+
+        public string SerialiseParameters<T1, T2, T3>(T1 p1, T2 p2, T3 p3)
+        {
+            return new StringBuilder(64).
+                Append(SerialiseType(p1)).Append(ParamSplitter).
+                Append(SerialiseType(p2)).Append(ParamSplitter).
+                Append(SerialiseType(p3)).ToString();
+        }
+
+        public string SerialiseParameters<T1, T2, T3, T4>(T1 p1, T2 p2, T3 p3, T4 p4)
+        {
+            return new StringBuilder(64).
+                Append(SerialiseType(p1)).Append(ParamSplitter).
+                Append(SerialiseType(p2)).Append(ParamSplitter).
+                Append(SerialiseType(p3)).Append(ParamSplitter).
+                Append(SerialiseType(p4)).ToString();
+        }
+
+        public string SerialiseParameters<T1, T2, T3, T4, T5>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5)
+        {
+            return new StringBuilder(64).
+                Append(SerialiseType(p1)).Append(ParamSplitter).
+                Append(SerialiseType(p2)).Append(ParamSplitter).
+                Append(SerialiseType(p3)).Append(ParamSplitter).
+                Append(SerialiseType(p4)).Append(ParamSplitter).
+                Append(SerialiseType(p5)).ToString();
+        }
+
+
+        public string SerialiseParameters<T1, T2, T3, T4, T5, T6>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6)
+        {
+            return new StringBuilder(128).
+                Append(SerialiseType(p1)).Append(ParamSplitter).
+                Append(SerialiseType(p2)).Append(ParamSplitter).
+                Append(SerialiseType(p3)).Append(ParamSplitter).
+                Append(SerialiseType(p4)).Append(ParamSplitter).
+                Append(SerialiseType(p5)).Append(ParamSplitter).
+                Append(SerialiseType(p6)).ToString();
         }
 
         /// <summary>
@@ -123,7 +197,7 @@ namespace CrossLanguageCS.Functions
                     if (j == indexLen)
                         return j;
                     // is the next character a parameter splitter?
-                    if (fullParameters[j + 1] == ParameterSplitter)
+                    if (fullParameters[j + 1] == ParamSplitter)
                     {
                         // this might just be someone going "hi 'mister', ok", if the splitter character is ,
                         // the ', should be the end of a string but what if it shouldn't be... so,
@@ -140,7 +214,7 @@ namespace CrossLanguageCS.Functions
             return -1;
         }
 
-        public KeyValuePair<string, string> GetNameParams(string input)
+        public KeyValuePair<string, string> SplitNameAndParameters(string input)
         {
             int splitIndex = input.IndexOf(FuncNameParamsSplitter);
             if (splitIndex == -1)
@@ -149,6 +223,40 @@ namespace CrossLanguageCS.Functions
             string functionName = input.Substring(0, splitIndex);
             string parameters = input.Substring(splitIndex + 1);
             return new KeyValuePair<string, string>(functionName, parameters);
+        }
+
+        public static string SerialiseType<T>(T t)
+        {
+            if (t is int)
+                return SerialiseInteger(t.ToString());
+            if (t is double)
+                return SerialiseDouble(t.ToString());
+            if (t is bool)
+                return SerialiseBoolean(t.ToString());
+            if (t is string)
+                return SerialiseString(t.ToString());
+
+            throw new UnsupportedTypeException(t.GetType());
+        }
+
+        public static string SerialiseInteger(string a)
+        {
+            return $"i{a}";
+        }
+
+        public static string SerialiseDouble(string a)
+        {
+            return $"d{a}";
+        }
+
+        public static string SerialiseBoolean(string a)
+        {
+            return $"b{a}";
+        }
+
+        public static string SerialiseString(string a)
+        {
+            return $"s'{a}'";
         }
 
         public static bool IsPrimitiveType(char c)

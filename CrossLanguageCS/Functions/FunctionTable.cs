@@ -9,7 +9,7 @@ namespace CrossLanguageCS.Functions
     /// </summary>
     public class FunctionTable
     {
-        private readonly Dictionary<string, IFunction> FunctionsMap;
+        public readonly Dictionary<string, IFunction> FunctionsMap;
 
         public FunctionTable()
         {
@@ -75,6 +75,17 @@ namespace CrossLanguageCS.Functions
             }
             if (name != null)
                 FunctionsMap.Remove(name);
+        }
+
+        #endregion
+
+        #region Getting
+
+        public IFunction GetFunction(string name)
+        {
+            if (FunctionsMap.TryGetValue(name, out IFunction function))
+                return function;
+            return null;
         }
 
         #endregion
