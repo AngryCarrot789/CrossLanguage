@@ -1,14 +1,15 @@
-﻿using System.IO.Ports;
+﻿using System.Collections.Generic;
+using System.IO.Ports;
 using CrossLanguageCS.FunctionDispatchers.Serial;
 using CrossLanguageCS.Functions;
 
 namespace CrossLanguageCS.FunctionDispatchers
 {
-    public class SerialFunctionDispatcher : FunctionProcessor
+    public class SerialFunctionProcessor : FunctionProcessor
     {
         private SerialTransceiver Transceiver;
 
-        public SerialFunctionDispatcher()
+        public SerialFunctionProcessor()
         {
             this.Transceiver = new SerialTransceiver("COM20", 9600, 8, StopBits.One, Parity.None, OnLineReceived, true);
         }
@@ -17,6 +18,11 @@ namespace CrossLanguageCS.FunctionDispatchers
         {
             // received:
             // sendPing:s'www.google.co.uk',i1000
+
+            // pair.Key == "sendPing"
+            // pair.Value == "s'www.google.co.uk',i1000"
+            KeyValuePair<string, string> pair = base.Parser.GetNameParams(line);
+            base.OnFunctionReceived(pair.Key, pair.Value);
         }
     }
 }

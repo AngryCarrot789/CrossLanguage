@@ -6,13 +6,17 @@ namespace CrossLanguageCS.Functions
 {
     public abstract class FunctionProcessor
     {
-        private FunctionTable Table;
-        private ParameterParser Parser;
+        protected FunctionTable Table;
+        protected ParameterParser Parser;
+
+        private List<string> InboundFunctionParameters;
 
         public FunctionProcessor()
         {
             Table = new FunctionTable();
             Parser = new ParameterParser();
+
+            InboundFunctionParameters = new List<string>(6);
         }
 
         /// <summary>
@@ -22,7 +26,8 @@ namespace CrossLanguageCS.Functions
         /// <param name="parameters"></param>
         public void OnFunctionReceived(string name, string parameters)
         {
-
+            // sendPing
+            // s'www.google.co.uk',i1000
         }
     }
 }
