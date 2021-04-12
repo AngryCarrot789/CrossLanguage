@@ -7,14 +7,14 @@ namespace CrossLanguageCS.Functions
     /// <summary>
     /// A class that contains a reference to functions based on their name, and allows you to get, set and invoke them
     /// </summary>
-    public class FunctionTable
+    public class FunctionRegister
     {
         /// <summary>
         /// A map where the key is the function name, and the value is the function itself
         /// </summary>
         public readonly Dictionary<string, IFunction> FunctionsMap;
 
-        public FunctionTable()
+        public FunctionRegister()
         {
             FunctionsMap = new Dictionary<string, IFunction>();
         }

@@ -8,15 +8,18 @@ namespace CrossLanguageCS.Demo
     {
         static void Main(string[] args)
         {
-            FunctionProcessor processor = new SerialFunctionProcessor();
+            SerialFunctionProcessor processor = new SerialFunctionProcessor();
 
-            processor.Table.RegisterFunction("SayHello", SayHello);
-            processor.Table.RegisterFunction("PrintHi", PrintHi);
+            processor.Register.RegisterFunction("SayHello", SayHello);
+            processor.Register.RegisterFunction("WriteConsole", PrintHi);
 
-            processor.OnFunctionReceived("SayHello", processor.Parameters.SerialiseParameters("hi there", 5));
-            processor.OnFunctionReceived("PrintHi", processor.Parameters.SerialiseParameters());
+            //Console.Read();
 
-            Console.Read();
+            processor.Dispatcher.DispatchFunction("writeConsole", "hello from C#");
+
+            // processor.OnFunctionReceived("SayHello", processor.Parameters.SerialiseParameters("hi there", 5));
+            // processor.OnFunctionReceived("PrintHi", processor.Parameters.SerialiseParameters());
+
         }
 
         public static void SayHello(object message, object numberOfTimes)
@@ -28,9 +31,9 @@ namespace CrossLanguageCS.Demo
             }
         }
 
-        public static void PrintHi()
+        public static void PrintHi(object content)
         {
-            Console.WriteLine("hiii!");
+            Console.WriteLine(content.ToString());
         }
     }
 }

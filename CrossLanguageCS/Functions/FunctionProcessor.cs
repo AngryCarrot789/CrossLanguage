@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
+using CrossLanguageCS.FunctionDispatchers.Serial;
 
 namespace CrossLanguageCS.Functions
 {
     public class FunctionProcessor
     {
-        public FunctionTable Table;
-        public ParameterCreator Parameters;
+        public FunctionRegister Register { get; private set; }
+        public IFunctionDispatcher Dispatcher { get; protected set; }
+        public ParameterParser Parameters { get; private set; }
 
         private List<object> InboundFunctionParameters;
 
         public FunctionProcessor()
         {
-            Table = new FunctionTable();
-            Parameters = new ParameterCreator();
-
+            Register = new FunctionRegister();
+            Parameters = new ParameterParser();
             InboundFunctionParameters = new List<object>(8);
         }
 
@@ -24,7 +25,7 @@ namespace CrossLanguageCS.Functions
         /// <param name="parameters"></param>
         public void OnFunctionReceived(string name, string parameters)
         {
-            IFunction function = Table.GetFunction(name);
+            IFunction function = Register.GetFunction(name);
             if (function != null)
             {
                 Parameters.DeserialiseAndAppendParameters(InboundFunctionParameters, parameters);

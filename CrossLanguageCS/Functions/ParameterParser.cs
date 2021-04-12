@@ -10,7 +10,7 @@ namespace CrossLanguageCS.Functions
     /// A class with some helper functions for extracting functions names, and also 
     /// a system for registering functions which create specific data types
     /// </summary>
-    public class ParameterCreator
+    public class ParameterParser
     {
         /// <summary>
         /// The character used to split the function name and the parameters
@@ -27,8 +27,6 @@ namespace CrossLanguageCS.Functions
         /// </summary>
         public char StringEncapsulator;
 
-        public const string NO_PARAMS__INVOKE_ONLY = "z";
-
         /// <summary>
         /// The characere which should go before <see cref="StringEncapsulator"/> 
         /// value if the character after that is equal to <see cref="ParamSplitter"/>,
@@ -36,13 +34,10 @@ namespace CrossLanguageCS.Functions
         /// </summary>
         public char StringEncapsulatorEndCanceller;
 
-        private Dictionary<Type, Func<object, string>> ParameterCreators;
-
         private StringBuilder ParameterBuilder;
 
-        public ParameterCreator(char funcParamSplitter = ':', char paramsSplitter = '|', char stringEncapsulator = '\'', char stringEncapsulatorCancel = '\\')
+        public ParameterParser(char funcParamSplitter = ':', char paramsSplitter = '|', char stringEncapsulator = '\'', char stringEncapsulatorCancel = '\\')
         {
-            ParameterCreators = new Dictionary<Type, Func<object, string>>();
             ParameterBuilder = new StringBuilder(256);
             FuncNameParamsSplitter = funcParamSplitter;
             ParamSplitter = paramsSplitter;
@@ -125,7 +120,7 @@ namespace CrossLanguageCS.Functions
 
         public string SerialiseParameters()
         {
-            return NO_PARAMS__INVOKE_ONLY;
+            return "!";
         }
 
         public string SerialiseParameters<T1>(T1 p1)
@@ -193,7 +188,7 @@ namespace CrossLanguageCS.Functions
         {
             lastEncapsulatorIndex = -1;
             // i == the start index into the actual string 
-            for (int j = i, len = fullParameters.Length, indexLen = len + 1; j < len; j++)
+            for (int j = i, len = fullParameters.Length, indexLen = len - 1; j < len; j++)
             {
                 // is it the encapsulator?
                 if (fullParameters[j] == StringEncapsulator)
@@ -230,6 +225,11 @@ namespace CrossLanguageCS.Functions
             string functionName = input.Substring(0, splitIndex);
             string parameters = input.Substring(splitIndex + 1);
             return new KeyValuePair<string, string>(functionName, parameters);
+        }
+
+        public string JoinFunction(string name, string serialisedParams)
+        {
+            return name + FuncNameParamsSplitter + serialisedParams;
         }
 
         public static string SerialiseType<T>(T t)

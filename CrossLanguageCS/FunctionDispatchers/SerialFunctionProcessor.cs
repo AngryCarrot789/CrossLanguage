@@ -8,11 +8,12 @@ namespace CrossLanguageCS.FunctionDispatchers
 {
     public class SerialFunctionProcessor : FunctionProcessor
     {
-        private readonly SerialTransceiver Transceiver;
+        public readonly SerialTransceiver Transceiver;
 
-        public SerialFunctionProcessor()
+        public SerialFunctionProcessor() : base()
         {
             this.Transceiver = new SerialTransceiver("COM20", 9600, 8, StopBits.One, Parity.None, OnLineReceived, true);
+            this.Dispatcher = new SerialFunctionDispatcher(Transceiver, Parameters);
         }
 
         private void OnLineReceived(string line)
@@ -25,12 +26,12 @@ namespace CrossLanguageCS.FunctionDispatchers
             KeyValuePair<string, string> pair = base.Parameters.SplitNameAndParameters(line);
             if (pair.Key == null)
             {
-                Console.WriteLine("Failed to receive a function invokation: the function name was null");
+                Console.WriteLine("Failed to receive a function invocation: the function name was null");
                 return;
             }
             if (pair.Value == null)
             {
-                Console.WriteLine("Failed to receive a function invokation: the parameter was null");
+                Console.WriteLine("Failed to receive a function invocation: the parameter was null");
                 return;
             }
 
