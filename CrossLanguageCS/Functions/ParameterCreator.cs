@@ -27,6 +27,8 @@ namespace CrossLanguageCS.Functions
         /// </summary>
         public char StringEncapsulator;
 
+        public const string NO_PARAMS__INVOKE_ONLY = "z";
+
         /// <summary>
         /// The characere which should go before <see cref="StringEncapsulator"/> 
         /// value if the character after that is equal to <see cref="ParamSplitter"/>,
@@ -119,6 +121,11 @@ namespace CrossLanguageCS.Functions
                     break;
                 c = fullParams[++index];
             }
+        }
+
+        public string SerialiseParameters()
+        {
+            return NO_PARAMS__INVOKE_ONLY;
         }
 
         public string SerialiseParameters<T1>(T1 p1)

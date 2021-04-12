@@ -2,108 +2,108 @@
 
 namespace CrossLanguageCS.Functions
 {
-    public class Function : IFunction
+    public class Function0 : IFunction
     {
         private readonly Action Action;
 
-        public Function(Action action)
+        public Function0(Action action)
         {
             this.Action = action;
         }
 
         public void Invoke()
         {
-            this.Action();
+            Action();
         }
     }
 
-    public class Function<T1> : IFunction
+    public class Function1 : IFunction
     {
-        private readonly Action<T1> Action;
+        private readonly Action<object> Action;
 
-        public Function(Action<T1> action)
+        public Function1(Action<object> action)
         {
             this.Action = action;
         }
 
-        public void Invoke(T1 p1)
+        public void Invoke(object a)
         {
-            this.Action(p1);
+            Action(a);
         }
     }
 
-    public class Function<T1, T2> : IFunction
+    public class Function2 : IFunction
     {
-        public readonly Action<T1, T2> Action;
+        private readonly Action<object, object> Action;
 
-        public Function(Action<T1, T2> action)
+        public Function2(Action<object, object> action)
         {
             this.Action = action;
         }
 
-        public void Invoke(T1 p1, T2 p2)
+        public void Invoke(object a, object b)
         {
-            this.Action(p1, p2);
+            Action(a, b);
         }
     }
 
-    public class Function<T1, T2, T3> : IFunction
+    public class Function3 : IFunction
     {
-        private readonly Action<T1, T2, T3> Action;
+        private readonly Action<object, object, object> Action;
 
-        public Function(Action<T1, T2, T3> action)
+        public Function3(Action<object, object, object> action)
         {
             this.Action = action;
         }
 
-        public void Invoke(T1 p1, T2 p2, T3 p3)
+        public void Invoke(object a, object b, object c)
         {
-            this.Action(p1, p2, p3);
+            Action(a, b, c);
         }
     }
 
-    public class Function<T1, T2, T3, T4> : IFunction
+    public class Function4 : IFunction
     {
-        private readonly Action<T1, T2, T3, T4> Action;
+        private readonly Action<object, object, object, object> Action;
 
-        public Function(Action<T1, T2, T3, T4> action)
+        public Function4(Action<object, object, object, object> action)
         {
             this.Action = action;
         }
 
-        public void Invoke(T1 p1, T2 p2, T3 p3, T4 p4)
+        public void Invoke(object a, object b, object c, object d)
         {
-            this.Action(p1, p2, p3, p4);
+            Action(a, b, c, d);
         }
     }
 
-    public class Function<T1, T2, T3, T4, T5> : IFunction
+    public class Function5 : IFunction
     {
-        private readonly Action<T1, T2, T3, T4, T5> Action;
+        private readonly Action<object, object, object, object, object> Action;
 
-        public Function(Action<T1, T2, T3, T4, T5> action)
+        public Function5(Action<object, object, object, object, object> action)
         {
             this.Action = action;
         }
 
-        public void Invoke(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5)
+        public void Invoke(object a, object b, object c, object d, object e)
         {
-            this.Action(p1, p2, p3, p4, p5);
+            Action(a, b, c, d, e);
         }
     }
 
-    public class Function<T1, T2, T3, T4, T5, T6> : IFunction
+    public class Function6 : IFunction
     {
-        private readonly Action<T1, T2, T3, T4, T5, T6> Action;
+        private readonly Action<object, object, object, object, object, object> Action;
 
-        public Function(Action<T1, T2, T3, T4, T5, T6> action)
+        public Function6(Action<object, object, object, object, object, object> action)
         {
             this.Action = action;
         }
 
-        public void Invoke(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6)
+        public void Invoke(object a, object b, object c, object d, object e, object f)
         {
-            this.Action(p1, p2, p3, p4, p5, p6);
+            Action(a, b, c, d, e, f);
         }
     }
 }

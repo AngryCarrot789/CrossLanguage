@@ -9,6 +9,9 @@ namespace CrossLanguageCS.Functions
     /// </summary>
     public class FunctionTable
     {
+        /// <summary>
+        /// A map where the key is the function name, and the value is the function itself
+        /// </summary>
         public readonly Dictionary<string, IFunction> FunctionsMap;
 
         public FunctionTable()
@@ -20,37 +23,37 @@ namespace CrossLanguageCS.Functions
 
         public void RegisterFunction(string functionName, Action function)
         {
-            FunctionsMap.Add(functionName, new Function(function));
+            FunctionsMap.Add(functionName, new Function0(function));
         }
 
-        public void RegisterFunction<T1>(string functionName, Action<T1> function)
+        public void RegisterFunction(string functionName, Action<object> function)
         {
-            FunctionsMap.Add(functionName, new Function<T1>(function));
+            FunctionsMap.Add(functionName, new Function1(function));
         }
 
-        public void RegisterFunction<T1, T2>(string functionName, Action<T1, T2> function)
+        public void RegisterFunction(string functionName, Action<object, object> function)
         {
-            FunctionsMap.Add(functionName, new Function<T1, T2>(function));
+            FunctionsMap.Add(functionName, new Function2(function));
         }
 
-        public void RegisterFunction<T1, T2, T3>(string functionName, Action<T1, T2, T3> function)
+        public void RegisterFunction(string functionName, Action<object, object, object> function)
         {
-            FunctionsMap.Add(functionName, new Function<T1, T2, T3>(function));
+            FunctionsMap.Add(functionName, new Function3(function));
         }
 
-        public void RegisterFunction<T1, T2, T3, T4>(string functionName, Action<T1, T2, T3, T4> function)
+        public void RegisterFunction(string functionName, Action<object, object, object, object> function)
         {
-            FunctionsMap.Add(functionName, new Function<T1, T2, T3, T4>(function));
+            FunctionsMap.Add(functionName, new Function4(function));
         }
 
-        public void RegisterFunction<T1, T2, T3, T4, T5>(string functionName, Action<T1, T2, T3, T4, T5> function)
+        public void RegisterFunction(string functionName, Action<object, object, object, object, object> function)
         {
-            FunctionsMap.Add(functionName, new Function<T1, T2, T3, T4, T5>(function));
+            FunctionsMap.Add(functionName, new Function5(function));
         }
 
-        public void RegisterFunction<T1, T2, T3, T4, T5, T6>(string functionName, Action<T1, T2, T3, T4, T5, T6> function)
+        public void RegisterFunction(string functionName, Action<object, object, object, object, object, object> function)
         {
-            FunctionsMap.Add(functionName, new Function<T1, T2, T3, T4, T5, T6>(function));
+            FunctionsMap.Add(functionName, new Function6(function));
         }
 
         #endregion

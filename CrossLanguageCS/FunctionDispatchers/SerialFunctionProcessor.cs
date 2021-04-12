@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO.Ports;
 using CrossLanguageCS.FunctionDispatchers.Serial;
 using CrossLanguageCS.Functions;
@@ -7,7 +8,7 @@ namespace CrossLanguageCS.FunctionDispatchers
 {
     public class SerialFunctionProcessor : FunctionProcessor
     {
-        private SerialTransceiver Transceiver;
+        private readonly SerialTransceiver Transceiver;
 
         public SerialFunctionProcessor()
         {
@@ -22,10 +23,18 @@ namespace CrossLanguageCS.FunctionDispatchers
             // pair.Key == "sendPing"
             // pair.Value == "s'www.google.co.uk',i1000"
             KeyValuePair<string, string> pair = base.Parameters.SplitNameAndParameters(line);
-            base.OnFunctionReceived(pair.Key, pair.Value);
+            if (pair.Key == null)
+            {
+                Console.WriteLine("Failed to receive a function invokation: the function name was null");
+                return;
+            }
+            if (pair.Value == null)
+            {
+                Console.WriteLine("Failed to receive a function invokation: the parameter was null");
+                return;
+            }
 
-            IFunction a = this.Table.FunctionsMap[""];
-            
+            base.OnFunctionReceived(pair.Key, pair.Value);
         }
     }
 }

@@ -10,19 +10,27 @@ namespace CrossLanguageCS.Demo
         {
             FunctionProcessor processor = new SerialFunctionProcessor();
 
-            processor.Table.RegisterFunction<string, int>("SayHello", SayHello);
+            processor.Table.RegisterFunction("SayHello", SayHello);
+            processor.Table.RegisterFunction("PrintHi", PrintHi);
 
             processor.OnFunctionReceived("SayHello", processor.Parameters.SerialiseParameters("hi there", 5));
+            processor.OnFunctionReceived("PrintHi", processor.Parameters.SerialiseParameters());
 
             Console.Read();
         }
 
-        public static void SayHello(string message, int numberOfTimes)
+        public static void SayHello(object message, object numberOfTimes)
         {
-            for(int i = 0; i < numberOfTimes; i++)
+            int number = (int)numberOfTimes;
+            for (int i = 0; i < number; i++)
             {
-                Console.WriteLine(message);
+                Console.WriteLine((string)message);
             }
+        }
+
+        public static void PrintHi()
+        {
+            Console.WriteLine("hiii!");
         }
     }
 }
