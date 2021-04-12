@@ -197,7 +197,7 @@ namespace CrossLanguageCS.Functions
                     // this is the end of the fullParameters, so either the last parameter was a string
                     // or it was the only parameter (and therefore the last ;) )
                     if (j == indexLen)
-                        return j;
+                        return j; // e
                     // is the next character a parameter splitter?
                     if (fullParameters[j + 1] == ParamSplitter)
                     {
